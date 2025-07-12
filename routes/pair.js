@@ -29,14 +29,20 @@ router.post("/api/pair", async (req, res) => {
         creds: state.creds,
         keys: makeCacheableSignalKeyStore(state.keys, pino({ level: "silent" }))
       },
-      logger: pino({ level: "silent" }),
-      browser: ["Lussh", "Chrome", "120.0.0.0"]
+      logger: pino({ level: "fatal" }),
+      browser: ["Lussh AI", "MacOS", "14.0.3"]  // spoofed browser for compatibility
     });
 
     sock.ev.on("creds.update", saveCreds);
 
+    // Connection debug logging
+    sock.ev.on("connection.update", (update) => {
+      console.log("🔌 Connection Status:", update.connection, update.lastDisconnect?.error?.message);
+    });
+
     if (!sock.authState.creds.registered) {
       const cleaned = number.replace(/[^0-9]/g, '');
+      await delay(1500);  // allow WebSocket to warm up
       const code = await sock.requestPairingCode(cleaned);
       console.log("✅ Pairing Code:", code);
       return res.send({ code });
