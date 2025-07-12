@@ -1,23 +1,99 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Lussh AI Pairing</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Lussh AI - WhatsApp Pairing</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    body { font-family: sans-serif; padding: 2em; background: #fafafa; }
-    input, button { padding: 10px; margin-top: 10px; width: 100%; }
-    #result { margin-top: 20px; font-weight: bold; color: green; }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Outfit', sans-serif;
+      background: linear-gradient(120deg, #f0f4ff, #e0f7fa);
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 400px;
+      width: 90%;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .card h2 {
+      margin-bottom: 10px;
+      color: #202840;
+      font-weight: 600;
+    }
+
+    .card p {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 30px;
+    }
+
+    input[type="text"] {
+      padding: 12px 16px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      width: 100%;
+      margin-bottom: 20px;
+      font-size: 16px;
+    }
+
+    button {
+      background: #3b82f6;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      width: 100%;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    button:hover {
+      background: #2563eb;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-size: 15px;
+      font-weight: 600;
+      color: green;
+      word-break: break-word;
+    }
+
+    .footer {
+      margin-top: 40px;
+      font-size: 13px;
+      color: #aaa;
+    }
   </style>
 </head>
 <body>
-  <h2>WhatsApp Pairing Code</h2>
-  <input id="number" type="text" placeholder="Enter phone number e.g. 23480..." />
-  <button onclick="pair()">Generate Code</button>
-  <div id="result"></div>
+  <div class="card">
+    <h2>🔐 Pair Your WhatsApp</h2>
+    <p>Enter your WhatsApp number to receive a pairing code.</p>
+    <input id="number" type="text" placeholder="e.g. 23480XXXXXXXX" />
+    <button onclick="pair()">Generate Pair Code</button>
+    <div id="result"></div>
+    <div class="footer">© 2025 Lussh AI</div>
+  </div>
 
   <script>
     async function pair() {
       const number = document.getElementById("number").value;
-      document.getElementById("result").innerText = "Loading...";
+      const result = document.getElementById("result");
+      result.innerText = "⌛ Generating pairing code...";
       const res = await fetch("/api/pair", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -25,9 +101,10 @@
       });
       const data = await res.json();
       if (data.code) {
-        document.getElementById("result").innerText = "✅ Code: " + data.code;
+        result.innerHTML = "✅ <strong>Pairing Code:</strong> <br>" + data.code;
       } else {
-        document.getElementById("result").innerText = "❌ Error: " + data.error;
+        result.style.color = "red";
+        result.innerText = "❌ " + (data.error || "Unknown Error");
       }
     }
   </script>
