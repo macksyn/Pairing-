@@ -1,52 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Lussh AI Pairing</title>
   <style>
-    body { font-family: Arial; padding: 2em; background: #f9f9f9; }
-    input, button { padding: 10px; width: 100%; margin-top: 10px; }
-    #output { margin-top: 20px; font-weight: bold; color: green; }
+    body { font-family: sans-serif; padding: 2em; background: #fafafa; }
+    input, button { padding: 10px; margin-top: 10px; width: 100%; }
+    #result { margin-top: 20px; font-weight: bold; color: green; }
   </style>
 </head>
 <body>
-  <h2>🔗 Pair Your WhatsApp with Lussh AI</h2>
-  <form id="pairForm">
-    <label>📱 WhatsApp Number (+234...):</label>
-    <input type="text" id="number" required />
-    <button type="submit">Generate Pairing Code</button>
-  </form>
-
-  <div id="output"></div>
+  <h2>WhatsApp Pairing Code</h2>
+  <input id="number" type="text" placeholder="Enter phone number e.g. 23480..." />
+  <button onclick="pair()">Generate Code</button>
+  <div id="result"></div>
 
   <script>
-    document.getElementById("pairForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const number = document.getElementById("number").value.trim();
-
-      document.getElementById("output").textContent = "⏳ Generating code...";
-
-      try {
-        const res = await fetch("/api/pair", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            number,
-            token: "ALEX_SECRET_KEY"
-          }),
-        });
-
-        const data = await res.json();
-        if (data.code) {
-          document.getElementById("output").textContent = `✅ Pairing Code: ${data.code}`;
-        } else {
-          document.getElementById("output").textContent = `❌ Error: ${data.error || "Unknown error"}`;
-        }
-      } catch (err) {
-        document.getElementById("output").textContent = "❌ Failed to contact server.";
+    async function pair() {
+      const number = document.getElementById("number").value;
+      document.getElementById("result").innerText = "Loading...";
+      const res = await fetch("/api/pair", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ number, token: "ALEX_SECRET_KEY" })
+      });
+      const data = await res.json();
+      if (data.code) {
+        document.getElementById("result").innerText = "✅ Code: " + data.code;
+      } else {
+        document.getElementById("result").innerText = "❌ Error: " + data.error;
       }
-    });
+    }
   </script>
 </body>
 </html>
