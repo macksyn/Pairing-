@@ -1,0 +1,15 @@
+{
+  "name": "lussh-ai-baileys-official",
+  "version": "1.0.0",
+  "description": "WhatsApp Pairing with @whiskeysockets/baileys",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@whiskeysockets/baileys": "^6.7.2",
+    "express": "^4.18.2",
+    "pino": "^8.14.1",
+    "dotenv": "^16.0.3"
+  }
+}
